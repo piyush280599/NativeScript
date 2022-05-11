@@ -136,6 +136,7 @@ export class iOSApplication implements iOSApplicationDefinition {
 	private _orientation: 'portrait' | 'landscape' | 'unknown';
 	private _rootView: View;
 	private _systemAppearance: 'light' | 'dark';
+	private launchEventCalled = false;
 
 	constructor() {
 		this._observers = new Array<NotificationObserver>();
@@ -222,11 +223,11 @@ export class iOSApplication implements iOSApplicationDefinition {
 		this._window = UIWindow.alloc().initWithFrame(UIScreen.mainScreen.bounds);
 		// TODO: Expose Window module so that it can we styled from XML & CSS
 		this._window.backgroundColor = this._backgroundColor;
-
-		this.notifyAppStarted(notification);
+		this.launchEventCalled = false;
 	}
 
 	public notifyAppStarted(notification?: NSNotification) {
+		this.launchEventCalled = true;
 		const args: LaunchEventData = {
 			eventName: launchEvent,
 			object: this,
@@ -252,6 +253,9 @@ export class iOSApplication implements iOSApplicationDefinition {
 
 	@profile
 	private didBecomeActive(notification: NSNotification) {
+		if (!this.launchEventCalled) {
+			this.notifyAppStarted(notification);
+		}
 		const ios = UIApplication.sharedApplication;
 		const object = this;
 		notify(<ApplicationEventData>{ eventName: resumeEvent, object, ios });
