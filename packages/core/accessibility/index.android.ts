@@ -439,7 +439,7 @@ export function isAccessibilityServiceEnabled(): boolean {
 }
 
 export function setupAccessibleView(view: Partial<View>): void {
-	updateAccessibilityProperties(view);
+	updateAccessibilityProperties(<View>view);
 }
 
 export function updateAccessibilityProperties(view: Partial<View>): void {
