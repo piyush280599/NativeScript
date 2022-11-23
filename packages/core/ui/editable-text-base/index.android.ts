@@ -523,6 +523,7 @@ export abstract class EditableTextBase extends EditableTextBaseCommon {
 
 			this.notify({
 				eventName: EditableTextBase.blurEvent,
+				object: this,
 			});
 			dismissSoftInput(this);
 		}
